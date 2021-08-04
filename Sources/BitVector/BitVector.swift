@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct BitVector : CustomStringConvertible {
+public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
-    var count: Int
-    init() {
+    public var count: Int
+    public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 64)
         CFBitVectorSetCount(bv, 64)
         count = 64
     }
-    init(size: Int) {
+    public init(size: Int) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, size)
         CFBitVectorSetCount(bv, size)
         count = size
     }
-    init(_ bits: [UInt8]) {
+    public init(_ bits: [UInt8]) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 0)
         CFBitVectorSetCount(bv, bits.count)
         count = bits.count
@@ -28,11 +28,11 @@ struct BitVector : CustomStringConvertible {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
         }
     }
-    func getBit(index: CFIndex) -> CFBit {
+    public func getBit(index: CFIndex) -> CFBit {
         assert (count > index && 0 <= index)
         return CFBitVectorGetBitAtIndex(bv, index)
     }
-    func setBit(index: CFIndex, value: CFBit) {
+    public func setBit(index: CFIndex, value: CFBit) {
         assert (count > index && 0 <= index)
         CFBitVectorSetBitAtIndex(bv, index, value)
     }
@@ -51,18 +51,18 @@ struct BitVector : CustomStringConvertible {
 }
 
 extension BitVector : Sequence {
-    func makeIterator() -> BitVectorIterator {
+    public func makeIterator() -> BitVectorIterator {
         return BitVectorIterator(self)
     }
 }
-struct BitVectorIterator : IteratorProtocol {
+public struct BitVectorIterator : IteratorProtocol {
     var bv: BitVector
     var index:CFIndex = 0
     
     init(_ bv: BitVector) {
         self.bv = bv
     }
-    mutating func next() -> CFBit? {
+    public mutating func next() -> CFBit? {
         guard bv.count > index else { return nil }
         let bit:CFBit = CFBitVectorGetBitAtIndex(bv.bv, index)
         index += 1
@@ -71,16 +71,16 @@ struct BitVectorIterator : IteratorProtocol {
 }
 
 extension BitVector : Collection {
-    func index(after i: Int) -> Int {
+    public func index(after i: Int) -> Int {
         return i + 1
     }
-    var startIndex: CFIndex {
+    public var startIndex: CFIndex {
         return 0
     }
-    var endIndex: CFIndex {
+    public var endIndex: CFIndex {
         return CFBitVectorGetCount(bv)
     }
-    subscript(position: CFIndex) -> CFBit {
+    public subscript(position: CFIndex) -> CFBit {
         get { return CFBitVectorGetBitAtIndex(bv, position) }
         set { CFBitVectorSetBitAtIndex(bv, position, newValue) }
     }
@@ -88,7 +88,7 @@ extension BitVector : Collection {
 
 extension BitVector : RangeReplaceableCollection {
     
-    mutating func replaceSubrange<C>(_ subrange: Range<Self.Index>, with newElements: C) where C : Collection, Self.Element == C.Element {
+    mutating public func replaceSubrange<C>(_ subrange: Range<Self.Index>, with newElements: C) where C : Collection, Self.Element == C.Element {
         
         var bvStart = BitVector(size: subrange.lowerBound - self.startIndex)
         var bvEnd = BitVector(size: self.endIndex - subrange.upperBound)
