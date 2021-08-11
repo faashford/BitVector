@@ -7,34 +7,56 @@
 
 import Foundation
 
+let desBlockSize = 64
+
 public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
-    public var count: Int
+    // var count: CFIndex = 0
     public init() {
-        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 64)
-        CFBitVectorSetCount(bv, 64)
-        count = 64
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
+        CFBitVectorSetCount(bv, desBlockSize)
+        // count = desBlockSize
     }
-    public init(size: Int) {
+    public init(size: Int = 64) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, size)
         CFBitVectorSetCount(bv, size)
-        count = size
+        // count = size
     }
-    public init(_ bits: [UInt8]) {
-        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 0)
+    public init(bits: [UInt8]) {
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, bits.count)
         CFBitVectorSetCount(bv, bits.count)
-        count = bits.count
+        // count = CFIndex(bits.count)
         for (i,bit) in bits.enumerated() {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
         }
     }
+    init(slice: Slice<BitVector>) {
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 0)
+        CFBitVectorSetCount(bv, slice.count)
+        var i = 0
+        for bit in slice {
+            CFBitVectorSetBitAtIndex(bv, i, bit)
+            i += 1
+        }
+    }
     public func getBit(index: CFIndex) -> CFBit {
-        assert (count > index && 0 <= index)
+        assert (getCount() > index && 0 <= index)
         return CFBitVectorGetBitAtIndex(bv, index)
     }
     public func setBit(index: CFIndex, value: CFBit) {
-        assert (count > index && 0 <= index)
+        assert (getCount() > index && 0 <= index)
         CFBitVectorSetBitAtIndex(bv, index, value)
+    }
+    public func getCount() -> CFIndex {
+        return CFBitVectorGetCount(self.bv)
+    }
+    public func getData() -> (count: Int, bits: [UInt8]){
+        let count = Int(CFBitVectorGetCount(self.bv))
+        var bits:[UInt8] = Array(repeating: 0, count: count)
+        for index in 0..<count {
+            bits[index] = UInt8(CFBitVectorGetBitAtIndex(self.bv, index))
+        }
+        return (count, bits)
     }
     public var description: String {
         var allBits = ""
@@ -63,7 +85,7 @@ public struct BitVectorIterator : IteratorProtocol {
         self.bv = bv
     }
     public mutating func next() -> CFBit? {
-        guard bv.count > index else { return nil }
+        guard bv.getCount() > index else { return nil }
         let bit:CFBit = CFBitVectorGetBitAtIndex(bv.bv, index)
         index += 1
         return bit
@@ -116,5 +138,87 @@ extension BitVector : RangeReplaceableCollection {
         
         
         self = result
+    }
+}
+
+extension BitVector {
+    static func |(lhs: BitVector, rhs: BitVector) -> BitVector{
+        assert(lhs.count == rhs.count)
+        var out = BitVector(size: lhs.count)
+        for i in 0..<lhs.count {
+            out[i] = lhs[i] | rhs[i]
+        }
+        return out
+    }
+    static func ^(lhs: BitVector, rhs: BitVector) -> BitVector {
+        assert(lhs.count == rhs.count)
+        var out = BitVector(size: lhs.count)
+        for i in 0..<lhs.count {
+            out[i] = lhs[i] ^ rhs[i]
+        }
+        return out
+    }
+    static func &(lhs: BitVector, rhs: BitVector) -> BitVector {
+        assert(lhs.count == rhs.count)
+        var out = BitVector(size: lhs.count)
+        for i in 0..<lhs.count {
+            out[i] = lhs[i] & rhs[i]
+        }
+        return out
+    }
+    static prefix func ~(bv: BitVector) -> BitVector {
+        var out = BitVector(size: bv.count)
+        for i in 0..<bv.count {
+            if 1 == bv[i] {
+                out[i] = 0
+            } else {
+                out[i] = 1
+            }
+        }
+        return out
+    }
+}
+
+extension BitVector {
+    public func permuted(with pv: [Int]) -> BitVector {
+        let out = BitVector(size: pv.count)
+        for i in 0..<pv.count {
+            CFBitVectorSetBitAtIndex(out.bv, i, CFBitVectorGetBitAtIndex(self.bv, pv[i]))
+        }
+        return out
+    }
+    public func halved() -> (BitVector, BitVector) {
+        let l = BitVector(size: self.count/2)
+        let r = BitVector(size: self.count/2)
+
+        var selfIndex = 0
+
+        for lIndex in 0..<self.count/2 {
+            CFBitVectorSetBitAtIndex(l.bv, lIndex, CFBitVectorGetBitAtIndex(self.bv, selfIndex))
+            selfIndex += 1
+        }
+        for rIndex in 0..<self.count/2 {
+            CFBitVectorSetBitAtIndex(r.bv, rIndex, CFBitVectorGetBitAtIndex(self.bv, selfIndex))
+            selfIndex += 1
+        }
+
+        return(l,r)
+    }
+    func rotated(by r: Int) -> BitVector {
+        if (0 < r) {
+            return self.rightRotated(by: r)
+        } else {
+            return self.leftRotated(by: abs(r))
+        }
+    }
+    func leftRotated(by r: Int)  -> BitVector {
+        let slice0 = BitVector(slice: self[self.startIndex..<r])
+        let slice1 = BitVector(slice: self[r..<self.endIndex])
+        return slice1 + slice0
+    }
+    func rightRotated(by r: Int) -> BitVector {
+        let slice0 = BitVector(slice: self[self.startIndex..<self.endIndex - r])
+        let slice1 = BitVector(slice: self[self.endIndex - r..<self.endIndex])
+        return slice1 + slice0
     }
 }
