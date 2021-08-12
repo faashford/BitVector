@@ -141,6 +141,7 @@ extension BitVector : RangeReplaceableCollection {
     }
 }
 
+/// Supports the BitwiseOperations protocol (dropped in Swift 3 somewhere)
 extension BitVector {
     static func |(lhs: BitVector, rhs: BitVector) -> BitVector{
         assert(lhs.count == rhs.count)
@@ -179,7 +180,31 @@ extension BitVector {
     }
 }
 
+/// Methods supporting DES specifically
 extension BitVector {
+    /**
+     Permute a `BitVector`.
+     
+     Uses a zero adjusted vector of index values (a permutation vector) to rearrange bits in a bit vector. For a permutation vector `pv`:
+     ```
+     pv = [7,5,1,0,3,6,4,2]
+     ```
+     operating on a `BitVector` `myBV`:
+     ```
+     myBV = [0,1,0,0,1,0,0,1]
+     ```
+     `permute()` places bit 0 of `myPV` into position 7, bit 1 into position 5 and so on:
+     ```
+     myPermutedBV = [0,0,1,0,0,1,0,1]
+     ```
+
+     Permutation can return a larger or smaller bit vector depending on the permutation vector.
+     
+     - Parameter pv: permutation vector; instructions for rearranging the `BitVector`.
+     
+     - Returns a `BitVector` of length `pv.count`.
+     
+     */
     public func permuted(with pv: [Int]) -> BitVector {
         let out = BitVector(size: pv.count)
         for i in 0..<pv.count {
@@ -187,6 +212,13 @@ extension BitVector {
         }
         return out
     }
+    /**
+     Split a `BitVector` into two equal halves.
+     
+     Create two new `BitVector`s of equal size from the caller where one `BitVector` is the first half and the other `BitVector` is the second half of the calling `BitVector`.
+     
+     - Returns: tuple of the left and right `BitVector`s resulting from the split.
+     */
     public func halved() -> (BitVector, BitVector) {
         let l = BitVector(size: self.count/2)
         let r = BitVector(size: self.count/2)
@@ -204,6 +236,17 @@ extension BitVector {
 
         return(l,r)
     }
+    /**
+     Creates a `BitVector` rotated by a specified amount.
+     ```
+     let testBV:BitVector(bits: [0,1,0,0,1,1,1,0]
+     let rotatedBV = testBV.rotated(by: -2)
+     ```
+     then, `rotatedBV` is `[0,0,1,1,1,0,0,1]`.
+     
+     - Parameter r: Amount to rotate the `BitVector`.  Negative numbers rotate left.
+     - Returns: `BitVector` rotated by `r`
+     */
     func rotated(by r: Int) -> BitVector {
         if (0 < r) {
             return self.rightRotated(by: r)
