@@ -7,10 +7,15 @@
 
 import Foundation
 
+var greeting = "Hello, playground"
+
 // useful constants for bitwise operator testing
 
 let bitwiseOpsConstant05:[UInt8] = [0,0,0,0,0,1,0,1]
 let bitwiseOpsConstant00:[UInt8] = [0,0,0,0,0,0,0,0]
+
+let a_h = "abcdefgh"
+let a_hBits = [0,1,1,0,0,0,0,1, 0,1,1,0,0,0,1,0, 0,1,1,0,0,0,1,1, 0,1,1,0,0,1,0,0, 0,1,1,0,0,1,0,1, 0,1,1,0,0,1,1,0, 0,1,1,0,0,1,1,1, 0,1,1,0,1,0,0,0]
 
 // related to M
 let M:[UInt8] = [0,0,0,0, 0,0,0,1, 0,0,1,0, 0,0,1,1, 0,1,0,0, 0,1,0,1, 0,1,1,0, 0,1,1,1, 1,0,0,0, 1,0,0,1, 1,0,1,0, 1,0,1,1, 1,1,0,0, 1,1,0,1, 1,1,1,0, 1,1,1,1]

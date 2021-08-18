@@ -2,6 +2,23 @@ import XCTest
 @testable import BitVector
 
 final class BitVectorInitTests: XCTestCase {
+    func testInitWithString() {
+        // 1. given
+        // a_h
+        let testBV:BitVector
+        var result = true
+        // 2. when
+        testBV = BitVector(block: a_h)
+        for i in 0..<64 {
+            let answer = a_hBits[i]
+            let value = CFBitVectorGetBitAtIndex(testBV.bv,i)
+            if answer != value {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
     func testDefaultInitNotNil() {
         // 1. given
         let testBV:BitVector

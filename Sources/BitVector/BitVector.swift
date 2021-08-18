@@ -4,7 +4,6 @@
 //
 //  Created by Francis Alan Ashford on 8/4/21.
 //
-
 import Foundation
 
 let desBlockSize = 64
@@ -12,6 +11,18 @@ let desBlockSize = 64
 public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
     // var count: CFIndex = 0
+    public init(block s: String) {
+        assert(8 == s.count)
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, s.count * UInt8.bitWidth)
+        CFBitVectorSetCount(bv, s.count * UInt8.bitWidth)
+        let sAsArray = Array(s.utf8)
+        // each of the 8 characters in s will generate 8 bits
+        for sIndex in 0..<sAsArray.count {
+            for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
+                CFBitVectorSetBitAtIndex(bv, i+(UInt8.bitWidth*sIndex), UInt32(sAsArray[sIndex]) & 1 << charOffset)
+            }
+        }
+    }
     public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
