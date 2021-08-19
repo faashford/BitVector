@@ -13,9 +13,9 @@ public struct BitVector : CustomStringConvertible {
     // var count: CFIndex = 0
     public init(block s: String) {
         assert(8 == s.count)
-        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, s.count * UInt8.bitWidth)
-        CFBitVectorSetCount(bv, s.count * UInt8.bitWidth)
-        let sAsArray = Array(s.utf8)
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
+        CFBitVectorSetCount(bv, desBlockSize)
+        let sAsArray = Array(s.utf16)
         // each of the 8 characters in s will generate 8 bits
         for sIndex in 0..<sAsArray.count {
             for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
@@ -26,17 +26,14 @@ public struct BitVector : CustomStringConvertible {
     public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
-        // count = desBlockSize
     }
     public init(size: Int = 64) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, size)
         CFBitVectorSetCount(bv, size)
-        // count = size
     }
     public init(bits: [UInt8]) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, bits.count)
         CFBitVectorSetCount(bv, bits.count)
-        // count = CFIndex(bits.count)
         for (i,bit) in bits.enumerated() {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
         }
