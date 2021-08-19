@@ -255,7 +255,7 @@ extension BitVector {
      - Parameter r: Amount to rotate the `BitVector`.  Negative numbers rotate left.
      - Returns: `BitVector` rotated by `r`
      */
-    func rotated(by r: Int) -> BitVector {
+    public func rotated(by r: Int) -> BitVector {
         if (0 < r) {
             return self.rightRotated(by: r)
         } else {
