@@ -52,32 +52,56 @@ final class DESSpecificMethodsTests: XCTestCase {
                 break
             }
         }
+        XCTAssertTrue(result)
     }
 }
-//    let keyrotsLeftAdjusted = keyRot.map({$0 * -1})
-//    func testRotation() {
-//        // 1. given
-//        let c0:BitVector = BitVector(bits: C0)
-//        let c2:BitVector = BitVector(bits: C2)
-//        var result = true
-//        // 2. when
-//        let c1 = c0.rotated(by: keyrotsLeftAdjusted[0])
-//        let c3 = c2.rotated(by: keyrotsLeftAdjusted[2])
-//        // 3. then
-//        for i in 0..<C1.count {
-//            if C1[i] != c1[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        for i in 0..<C3.count {
-//            if C3[i] != c3[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result, "")
-//    }
+
+final class AggregateTests : XCTestCase {
+    func testArrayInitialization() {
+        // 1. given
+        // M an 8 character message
+        var testBVs = [BitVector]()
+        let sampleBV = BitVector(block: M)
+        var result = true
+        var message = ""
+        // 2. when
+        for _ in 0..<17 {
+            testBVs.append(sampleBV)
+        }
+        // 3. then
+        if 17 != testBVs.count {
+            result = false
+            message = "**** Fail: testBVs.count is actually \(testBVs.count)."
+        } else {
+            message = "Success"
+        }
+        XCTAssertTrue(result, message)
+    }
+    func testArrayTuplesInitialization() {
+        // 1. given
+        // M and K are 8 character strings
+        let leftSampleBV = BitVector(block: M)
+        let rightSampleBV = BitVector(block: K)
+        var testTuple = [(BitVector, BitVector)]()
+        var result = true
+        var message = ""
+        // 2. when
+        // the tuples are set with left and right samples, 17 times using append()
+        for _ in 0..<17 {
+            testTuple.append((leftSampleBV,rightSampleBV))
+        }
+        // 3. then
+        // the length of the array of tuples should be 17
+        if 17 != testTuple.count {
+            result = false
+            message = "**** Fail: testTuple.count is actually \(testTuple.count)."
+        } else {
+            message = "Success"
+        }
+        XCTAssertTrue(result, message)
+    }
+}
+
 //    func testDefaultInitNotNil() {
 //        // 1. given
 //        let testBV:BitVector
