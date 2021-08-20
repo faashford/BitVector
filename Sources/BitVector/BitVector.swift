@@ -10,9 +10,7 @@ let desBlockSize = 64
 
 public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
-    // var count: CFIndex = 0
     public init(block s: String) {
-        assert(8 == s.count)
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
         let sAsArray = Array(s.utf16)
