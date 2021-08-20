@@ -10,6 +10,7 @@ let desBlockSize = 64
 
 public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
+
     /**
      `init(block s: String)` initializes a BitVector based on a string of characters.
      
@@ -21,8 +22,8 @@ public struct BitVector : CustomStringConvertible {
      
      - Bug: `BitVectors` of size other than 8 characters are needed when calculating the sub-keys in the DES algorithm.
      */
+
     public init(block s: String) {
-        assert(8 == s.count)
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
         let sAsArray = Array(s.utf16)
