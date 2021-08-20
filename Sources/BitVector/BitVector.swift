@@ -10,6 +10,19 @@ let desBlockSize = 64
 
 public struct BitVector : CustomStringConvertible {
     var bv: CFMutableBitVector?
+
+    /**
+     `init(block s: String)` initializes a BitVector based on a string of characters.
+     
+     This is the primary method used to initialize bit vectors. The length of the string argument must be 8 characters.
+     
+     This initialization method initializes a BitVector one character at a time. The number of the character is broken down to bits. The bits are stored in the BitVector in Big-endian order.
+     
+     - Parameter s: `String` eight characters long
+     
+     - Bug: `BitVectors` of size other than 8 characters are needed when calculating the sub-keys in the DES algorithm.
+     */
+
     public init(block s: String) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
@@ -21,14 +34,31 @@ public struct BitVector : CustomStringConvertible {
             }
         }
     }
+    /**
+     Initializes a BitVector 64 bits long.
+     
+     This initialization is used by the RangeReplaceableCollection protocol. It is not used in the DES algorithm implementation.
+     */
     public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
         CFBitVectorSetCount(bv, desBlockSize)
     }
+    /**
+     Initializes a BitVector of arbitrary length.
+     
+     Used when initialization is needed prior to value assignment as when an aggregate of BitVectors is being set up.
+     */
     public init(size: Int = 64) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, size)
         CFBitVectorSetCount(bv, size)
     }
+    /**
+     Initializes a BitVector based on an array of `[UInt8]`s.
+     
+     This is used when testing the BitVector. Bits are easier to compare when there is a problem.
+     
+     - Parameter bits: `[UInt8]` of arbitrary length.
+     */
     public init(bits: [UInt8]) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, bits.count)
         CFBitVectorSetCount(bv, bits.count)
@@ -36,6 +66,13 @@ public struct BitVector : CustomStringConvertible {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
         }
     }
+    /**
+     Initializes a BitVector from a `Slice` of a BitVector
+     
+     Returns from using any of the methods from the RangeReplaceableCollection will be Slices of the type. These slices must be converted to BitVector type in order to be useful: BitVector is not a generic.
+     
+     - Parameter slice: `Slice<BitVector>`, the typical return value from RangeReplaceableCollection functions.
+     */
     init(slice: Slice<BitVector>) {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, 0)
         CFBitVectorSetCount(bv, slice.count)
