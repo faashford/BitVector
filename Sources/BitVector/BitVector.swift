@@ -186,7 +186,7 @@ extension BitVector : RangeReplaceableCollection {
 
 /// Supports the BitwiseOperations protocol (dropped in Swift 3 somewhere)
 extension BitVector {
-    static func |(lhs: BitVector, rhs: BitVector) -> BitVector{
+    public static func |(lhs: BitVector, rhs: BitVector) -> BitVector{
         assert(lhs.count == rhs.count)
         var out = BitVector(size: lhs.count)
         for i in 0..<lhs.count {
@@ -194,7 +194,7 @@ extension BitVector {
         }
         return out
     }
-    static func ^(lhs: BitVector, rhs: BitVector) -> BitVector {
+    public static func ^(lhs: BitVector, rhs: BitVector) -> BitVector {
         assert(lhs.count == rhs.count)
         var out = BitVector(size: lhs.count)
         for i in 0..<lhs.count {
@@ -202,7 +202,7 @@ extension BitVector {
         }
         return out
     }
-    static func &(lhs: BitVector, rhs: BitVector) -> BitVector {
+    public static func &(lhs: BitVector, rhs: BitVector) -> BitVector {
         assert(lhs.count == rhs.count)
         var out = BitVector(size: lhs.count)
         for i in 0..<lhs.count {
@@ -210,7 +210,7 @@ extension BitVector {
         }
         return out
     }
-    static prefix func ~(bv: BitVector) -> BitVector {
+    public static prefix func ~(bv: BitVector) -> BitVector {
         var out = BitVector(size: bv.count)
         for i in 0..<bv.count {
             if 1 == bv[i] {

@@ -283,90 +283,90 @@ final class AggregateTests : XCTestCase {
 //    }
 //}
 //
-//final class BitVectorBitwiseOperationsProtocolTests : XCTestCase {
-//    func testBitwiseOr() {
-//        // 1. given
-//        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
-//        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
-//        let answerBV: BitVector = testBV
-//        var result = true
-//        // 2. when
-//        let out = testBV | zeroBV
-//        // 3. then
-//        for i in 0..<testBV.count {
-//            if answerBV[i] != out[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result)
-//    }
-//    func testBitwiseXOR() {
-//        // 1. given
-//        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
-//        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
-//        var result = true
-//        // 2. when
-//        let out = testBV ^ zeroBV
-//        // 3. then
-//        for i in 0..<testBV.count {
-//            if testBV[i] != out[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result)
-//    }
-//    func testBitwiseAND() {
-//        // 1. given
-//        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
-//        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
-//        var result = true
-//        // 2. when
-//        let out = testBV & zeroBV
-//        // 3. then
-//        for i in 0..<testBV.count {
-//            if zeroBV[i] != out[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result)
-//    }
-//    func testBitwiseNOTAND() {
-//        // 1. given
-//        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
-//        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
-//        var result = true
-//        // 2. when
-//        let out = testBV & ~zeroBV
-//        // 3. then
-//        for i in 0..<testBV.count {
-//            if testBV[i] != out[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result)
-//    }
-//    func testBitwiseNOTXOR() {
-//        // 1. given
-//        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
-//        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
-//        var result = true
-//        // 2. when
-//        let out = testBV ^ ~zeroBV
-//        let notTestBV = ~testBV
-//        // 3. then
-//        for i in 0..<testBV.count {
-//            if notTestBV[i] != out[i] {
-//                result = false
-//                break
-//            }
-//        }
-//        XCTAssertTrue(result)
-//    }
-//}
+final class BitVectorBitwiseOperationsProtocolTests : XCTestCase {
+    func testBitwiseOr() {
+        // 1. given
+        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
+        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
+        let answerBV: BitVector = testBV
+        var result = true
+        // 2. when
+        let out = testBV | zeroBV
+        // 3. then
+        for i in 0..<testBV.count {
+            if answerBV[i] != out[i] {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
+    func testBitwiseXOR() {
+        // 1. given
+        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
+        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
+        var result = true
+        // 2. when
+        let out = testBV ^ zeroBV
+        // 3. then
+        for i in 0..<testBV.count {
+            if testBV[i] != out[i] {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
+    func testBitwiseAND() {
+        // 1. given
+        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
+        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
+        var result = true
+        // 2. when
+        let out = testBV & zeroBV
+        // 3. then
+        for i in 0..<testBV.count {
+            if zeroBV[i] != out[i] {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
+    func testBitwiseNOTAND() {
+        // 1. given
+        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
+        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
+        var result = true
+        // 2. when
+        let out = testBV & ~zeroBV
+        // 3. then
+        for i in 0..<testBV.count {
+            if testBV[i] != out[i] {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
+    func testBitwiseNOTXOR() {
+        // 1. given
+        let testBV: BitVector = BitVector(bits: bitwiseOpsConstant05)
+        let zeroBV: BitVector = BitVector(bits: bitwiseOpsConstant00)
+        var result = true
+        // 2. when
+        let out = testBV ^ ~zeroBV
+        let notTestBV = ~testBV
+        // 3. then
+        for i in 0..<testBV.count {
+            if notTestBV[i] != out[i] {
+                result = false
+                break
+            }
+        }
+        XCTAssertTrue(result)
+    }
+}
 //
 //final class TestBitVectorSpecificOperations : XCTestCase {
 //    func testPermutedVector() {
