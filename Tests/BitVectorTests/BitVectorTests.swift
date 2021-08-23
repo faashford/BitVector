@@ -30,6 +30,35 @@ final class BitVectorInitTests: XCTestCase {
         XCTAssertTrue(result)
     }
 }
+final class BitVectorPrintingTests: XCTestCase {
+    // bitsToString(bv: BitVector) -> String
+    func testGetString() {
+        // 1. given a_h as a string
+        var stringMatches = true
+        var testBV:BitVector
+        // 2. when
+        testBV = BitVector(block: a_h)
+        // 3. then
+        if a_h != testBV.getString() {
+            stringMatches = false
+        }
+        XCTAssertTrue(stringMatches)
+    }
+    func testGetBits() {
+        // 1. given
+        // a_h as a string
+        // a_h as bits as a [UInt8]
+        var stringMatches = true
+        var testBV:BitVector
+        // 2. when
+        testBV = BitVector(block: a_h)
+        // 3. then
+        if a_hAsBitString != testBV.getBits() {
+            stringMatches = false
+        }
+        XCTAssert(stringMatches)
+    }
+}
 final class DESSpecificMethodsTests: XCTestCase {
     func testRotated() {
         // 1. given

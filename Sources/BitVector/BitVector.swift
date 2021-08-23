@@ -101,20 +101,50 @@ public struct BitVector : CustomStringConvertible {
         }
         return (count, bits)
     }
-    public var description: String {
-        var allBits = ""
-        
-        for i in 0..<count {
-            if (i % 8 == 0) && 0 != i {
-                allBits += " "
+    public func bitsToString() -> String {
+        var u = ""
+        for i in stride(from: 0, to:self.count, by: 8) {
+            let r = i..<8+i
+            let t = self[r].reversed()
+            var out = 0
+            for offset in 0..<8 {
+                out += Int(t[offset]) << offset
             }
-            allBits += String(CFBitVectorGetBitAtIndex(bv, i))
-            
+            let f = String(Unicode.Scalar(out)!)
+            u.append(f)
         }
-        return(allBits)
+        return u
+    }
+    public func getBits() -> String {
+        var u = ""
+        for (i,b) in self.enumerated() {
+            if i % 8 == 0 && 0 != i {
+                u.append(" ")
+            }
+            u.append(String(b))
+        }
+        return u
+    }
+    func getString() -> String {
+        var u = ""
+        for i in stride(from: 0, to: self.count, by: 8) {
+            let r = i..<8+i
+            let t = (self[r].reversed())
+            var out = 0
+            for offset in 0..<8 {
+                out += Int(t[offset]) << offset
+            }
+            let f = String(Unicode.Scalar(out)!)
+            u += f
+        }
+        return u
+    }
+    public var description: String {
+        var out = self.getString() + "\n"
+        out += self.getBits()
+        return(out)
     }
 }
-
 extension BitVector : Sequence {
     public func makeIterator() -> BitVectorIterator {
         return BitVectorIterator(self)
