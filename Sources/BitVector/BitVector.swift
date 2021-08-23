@@ -125,7 +125,7 @@ public struct BitVector : CustomStringConvertible {
         }
         return u
     }
-    func getString() -> String {
+    public func getString() -> String {
         var u = ""
         for i in stride(from: 0, to: self.count, by: 8) {
             let r = i..<8+i
