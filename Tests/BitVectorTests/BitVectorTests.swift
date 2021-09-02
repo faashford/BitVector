@@ -37,9 +37,9 @@ final class BitVectorPrintingTests: XCTestCase {
         var stringMatches = true
         var testBV:BitVector
         // 2. when
-        testBV = BitVector(block: a_h)
+        testBV = BitVector(block: a_h_2)
         // 3. then
-        if a_h != testBV.getString() {
+        if a_h_2 != testBV.getString() {
             stringMatches = false
         }
         XCTAssertTrue(stringMatches)
