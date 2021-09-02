@@ -38,6 +38,8 @@ public struct BitVector : CustomStringConvertible {
      Initializes a BitVector 64 bits long.
      
      This initialization is used by the RangeReplaceableCollection protocol. It is not used in the DES algorithm implementation.
+     
+     Note: This has to be there! or `RangeReplaceableCollecttion` functionality will not be available. Do not remove!
      */
     public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
@@ -55,8 +57,6 @@ public struct BitVector : CustomStringConvertible {
     /**
      Initializes a BitVector based on an array of `[UInt8]`s.
      
-     This is used when testing the BitVector. Bits are easier to compare when there is a problem.
-     
      - Parameter bits: `[UInt8]` of arbitrary length.
      */
     public init(bits: [UInt8]) {
@@ -64,6 +64,18 @@ public struct BitVector : CustomStringConvertible {
         CFBitVectorSetCount(bv, bits.count)
         for (i,bit) in bits.enumerated() {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
+        }
+    }
+    /**
+     Initializes a BitVector based on an array of `String`.
+     
+     - Parameter bits: `String` of arbitrary length.
+     */
+    public init(bits: String) {
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, bits.count)
+        CFBitVectorSetCount(bv, bits.count)
+        for (i,bit) in bits.enumerated() {
+            CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(String(bit))!)
         }
     }
     /**
