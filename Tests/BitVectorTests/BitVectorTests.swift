@@ -105,6 +105,7 @@ final class BitVectorBitwiseOperationsProtocolTests : XCTestCase {
                 result = false
                 break
             }
+
         }
         XCTAssertTrue(result)
     }
