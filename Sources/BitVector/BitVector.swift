@@ -21,23 +21,27 @@ public struct BitVector : CustomStringConvertible {
      - Parameter s: `String` eight characters long
      
      - Bug: `BitVectors` of size other than 8 characters are needed when calculating the sub-keys in the DES algorithm.
+     
+     - Note: This initialization method is not needed.
      */
 
-    public init(block s: String) {
-        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
-        CFBitVectorSetCount(bv, desBlockSize)
-        let sAsArray = Array(s.utf16)
-        // each of the 8 characters in s will generate 8 bits
-        for sIndex in 0..<sAsArray.count {
-            for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
-                CFBitVectorSetBitAtIndex(bv, i+(UInt8.bitWidth*sIndex), UInt32(sAsArray[sIndex]) & 1 << charOffset)
-            }
-        }
-    }
+//    public init(block s: String) {
+//        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
+//        CFBitVectorSetCount(bv, desBlockSize)
+//        let sAsArray = Array(s.utf16)
+//        // each of the 8 characters in s will generate 8 bits
+//        for sIndex in 0..<sAsArray.count {
+//            for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
+//                CFBitVectorSetBitAtIndex(bv, i+(UInt8.bitWidth*sIndex), UInt32(sAsArray[sIndex]) & 1 << charOffset)
+//            }
+//        }
+//    }
     /**
      Initializes a BitVector 64 bits long.
      
      This initialization is used by the RangeReplaceableCollection protocol. It is not used in the DES algorithm implementation.
+     
+     Note: This has to be there! or `RangeReplaceableCollecttion` functionality will not be available. Do not remove!
      */
     public init() {
         bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
@@ -55,8 +59,6 @@ public struct BitVector : CustomStringConvertible {
     /**
      Initializes a BitVector based on an array of `[UInt8]`s.
      
-     This is used when testing the BitVector. Bits are easier to compare when there is a problem.
-     
      - Parameter bits: `[UInt8]` of arbitrary length.
      */
     public init(bits: [UInt8]) {
@@ -64,6 +66,18 @@ public struct BitVector : CustomStringConvertible {
         CFBitVectorSetCount(bv, bits.count)
         for (i,bit) in bits.enumerated() {
             CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(bit))
+        }
+    }
+    /**
+     Initializes a BitVector based on an array of `String`.
+     
+     - Parameter bits: `String` of arbitrary length.
+     */
+    public init(bits: String) {
+        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, bits.count)
+        CFBitVectorSetCount(bv, bits.count)
+        for (i,bit) in bits.enumerated() {
+            CFBitVectorSetBitAtIndex(bv, CFIndex(i), CFBit(String(bit))!)
         }
     }
     /**
