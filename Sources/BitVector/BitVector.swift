@@ -21,19 +21,21 @@ public struct BitVector : CustomStringConvertible {
      - Parameter s: `String` eight characters long
      
      - Bug: `BitVectors` of size other than 8 characters are needed when calculating the sub-keys in the DES algorithm.
+     
+     - Note: This initialization method is not needed.
      */
 
-    public init(block s: String) {
-        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
-        CFBitVectorSetCount(bv, desBlockSize)
-        let sAsArray = Array(s.utf16)
-        // each of the 8 characters in s will generate 8 bits
-        for sIndex in 0..<sAsArray.count {
-            for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
-                CFBitVectorSetBitAtIndex(bv, i+(UInt8.bitWidth*sIndex), UInt32(sAsArray[sIndex]) & 1 << charOffset)
-            }
-        }
-    }
+//    public init(block s: String) {
+//        bv = CFBitVectorCreateMutable(kCFAllocatorDefault, desBlockSize)
+//        CFBitVectorSetCount(bv, desBlockSize)
+//        let sAsArray = Array(s.utf16)
+//        // each of the 8 characters in s will generate 8 bits
+//        for sIndex in 0..<sAsArray.count {
+//            for (i,charOffset) in stride(from: UInt8.bitWidth - 1, through: 0, by: -1).enumerated() {
+//                CFBitVectorSetBitAtIndex(bv, i+(UInt8.bitWidth*sIndex), UInt32(sAsArray[sIndex]) & 1 << charOffset)
+//            }
+//        }
+//    }
     /**
      Initializes a BitVector 64 bits long.
      
